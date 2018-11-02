@@ -47,6 +47,7 @@ let g:Lf_Helps = {
             \ "help":           "navigate the help tags",
             \ "colorscheme":    "switch between colorschemes",
             \ "self":           "execute the commands of itself",
+            \ "rg":             "grep using rg",
             \ }
 
 let g:Lf_Arguments = {
@@ -79,6 +80,7 @@ let g:Lf_Arguments = {
             \ "help":[],
             \ "colorscheme":[],
             \ "self":[],
+            \ "rg":[],
             \}
 
 let g:Lf_CommonArguments = [

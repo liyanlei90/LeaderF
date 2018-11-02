@@ -138,6 +138,10 @@ class AnyExplorer(Explorer):
     def supportsMulti(self):
         return bool(int(self._config.get("supports_multi", False)))
 
+    def cleanup(self):
+        for exe in self._executor:
+            exe.killProcess()
+        self._executor = []
 
 #*****************************************************
 # AnyExplManager
@@ -464,6 +468,9 @@ class AnyHub(object):
             elif category == "self":
                 from .selfExpl import selfExplManager
                 manager = selfExplManager
+            elif category == "rg":
+                from .rgExpl import rgExplManager
+                manager = rgExplManager
             else:
                 raise Exception("Unrecognized argument %s!" % category)
 

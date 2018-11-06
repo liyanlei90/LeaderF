@@ -20,9 +20,13 @@ class RgExplorer(Explorer):
         self._executor = []
 
     def getContent(self, *args, **kwargs):
+        if os.name == 'nt':
+            cwd = '.'
+        else:
+            cwd = ''
         executor = AsyncExecutor()
         self._executor.append(executor)
-        cmd = '''rg --no-heading --with-filename --color never --line-number --smart-case "" '''
+        cmd = '''rg --no-heading --with-filename --color never --line-number --smart-case "int" %s''' % cwd
         content = executor.execute(cmd)
         # content = executor.execute(cmd, encoding=lfEval("&encoding"))
         return content
@@ -60,8 +64,13 @@ class RgExplManager(Manager):
         if len(args) == 0:
             return
         line = args[0]
-        buf_number = int(re.sub(r"^.*?(\d+).*$", r"\1", line))
-        lfCmd("hide buffer %d" % buf_number)
+        file, line_num = line.split(':', 2)[:2]
+        if file.startswith('+'):
+            file = os.path.abspath(file)
+        try:
+            lfCmd("hide edit +%s %s" % (line_num, escSpecial(file)))
+        except vim.error as e:
+            lfPrintError(e)
 
     def _getDigest(self, line, mode):
         """
@@ -71,18 +80,7 @@ class RgExplManager(Manager):
                   1, return the name only
                   2, return the directory name
         """
-        if not line:
-            return ''
-        prefix_len = self._getExplorer().getPrefixLength()
-        if mode == 0:
-            return line[prefix_len:]
-        elif mode == 1:
-            buf_number = int(re.sub(r"^.*?(\d+).*$", r"\1", line))
-            basename = getBasename(vim.buffers[buf_number].name)
-            return basename if basename else "[No Name]"
-        else:
-            start_pos = line.find(' "')
-            return line[start_pos+2 : -1]
+        return line
 
     def _getDigestStartPos(self, line, mode):
         """
@@ -92,19 +90,7 @@ class RgExplManager(Manager):
                   1, return the start postion of name only
                   2, return the start postion of directory name
         """
-        if not line:
-            return 0
-        prefix_len = self._getExplorer().getPrefixLength()
-        if mode == 0:
-            return prefix_len
-        elif mode == 1:
-            return prefix_len
-        else:
-            buf_number = int(re.sub(r"^.*?(\d+).*$", r"\1", line))
-            basename = getBasename(vim.buffers[buf_number].name)
-            space_num = self._getExplorer().getMaxBufnameLen() \
-                        - int(lfEval("strdisplaywidth('%s')" % escQuote(basename)))
-            return prefix_len + lfBytesLen(basename) + space_num + 2
+        return 0
 
     def _createHelp(self):
         help = []
@@ -122,15 +108,9 @@ class RgExplManager(Manager):
 
     def _afterEnter(self):
         super(RgExplManager, self)._afterEnter()
-        id = int(lfEval("matchadd('Lf_hl_bufNumber', '^\s*\zs\d\+')"))
+        id = int(lfEval("matchadd('Lf_hl_rgFileName', '^[^:]*\ze:')"))
         self._match_ids.append(id)
-        id = int(lfEval("matchadd('Lf_hl_bufIndicators', '^\s*\d\+\s*\zsu\=\s*[#%]\=...')"))
-        self._match_ids.append(id)
-        id = int(lfEval("matchadd('Lf_hl_bufModified', '^\s*\d\+\s*u\=\s*[#%]\=.+\s*\zs.*$')"))
-        self._match_ids.append(id)
-        id = int(lfEval("matchadd('Lf_hl_bufNomodifiable', '^\s*\d\+\s*u\=\s*[#%]\=..-\s*\zs.*$')"))
-        self._match_ids.append(id)
-        id = int(lfEval('''matchadd('Lf_hl_bufDirname', ' \zs".*"$')'''))
+        id = int(lfEval("matchadd('Lf_hl_rgLineNumber', '^[^:]*:\zs\d\+')"))
         self._match_ids.append(id)
 
     def _beforeExit(self):

@@ -80,7 +80,12 @@ let g:Lf_Arguments = {
             \ "help":[],
             \ "colorscheme":[],
             \ "self":[],
-            \ "rg":[],
+            \ "rg":[
+            \           [
+            \               {"name": ["--literal"], "nargs": "+", "help": "treat the pattern as a literal string"},
+            \               {"name": ["--regex"], "nargs": "+", "help": "treat the pattern as a regular expression"},
+            \           ],
+            \   ],
             \}
 
 let g:Lf_CommonArguments = [
@@ -103,7 +108,7 @@ let g:Lf_CommonArguments = [
             \   {"name": ["--nameOnly"], "nargs": 0, "help": "LeaderF is in NameOnly mode by default"},
             \   {"name": ["--fullPath"], "nargs": 0, "help": "LeaderF is in FullPath mode by default"},
             \   {"name": ["--fuzzy"],    "nargs": 0, "help": "LeaderF is in Fuzzy mode by default"},
-            \   {"name": ["--regex"],    "nargs": 0, "help": "LeaderF is in Regex mode by default"},
+            \   {"name": ["--regexMode"],    "nargs": 0, "help": "LeaderF is in Regex mode by default"},
             \ ],
             \]
 
@@ -112,7 +117,7 @@ let g:Lf_CommonArguments = [
 " [
 "   ["--input", "--cword"],
 "   ["--top", "--bottom", "--left", "--right", "--belowright", "--aboveleft", "--fullScreen"],
-"   ["--nameOnly", "--fullPath", "--fuzzy", "--regex"],
+"   ["--nameOnly", "--fullPath", "--fuzzy", "--regexMode"],
 " ]
 function! s:Lf_Refine(arguments)
     let result = []
@@ -164,7 +169,7 @@ function! leaderf#Any#start(bang, args)
     if a:args == ""
 
     else
-        call leaderf#LfPy("anyHub.start('".a:args."', bang=".a:bang.")")
+        call leaderf#LfPy("anyHub.start(''' ".a:args." ''', bang=".a:bang.")")
     endif
 endfunction
 

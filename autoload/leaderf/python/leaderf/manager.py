@@ -169,10 +169,10 @@ class Manager(object):
         else:
             mode = 'Regex'
 
-        modes = {"--nameOnly", "--fullPath", "--fuzzy", "--regex"}
+        modes = {"--nameOnly", "--fullPath", "--fuzzy", "--regexMode"}
         for opt in kwargs.get("arguments", {}):
             if opt in modes:
-                if opt == "--regex":
+                if opt == "--regexMode":
                     mode = 'Regex'
                 elif self._getExplorer().supportsNameOnly():
                     if opt == "--nameOnly":

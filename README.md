@@ -79,7 +79,7 @@ Usage
 ```
 usage: Leaderf[!] [-h] [--reverse] [--stayOpen] [--input INPUT | --cword]
                   [--top | --bottom | --left | --right | --belowright | --aboveleft | --fullScreen]
-                  [--nameOnly | --fullPath | --fuzzy | --regex]
+                  [--nameOnly | --fullPath | --fuzzy | --regexMode]
                   {file,tag,function,mru,searchHistory,cmdHistory,help,line,colorscheme,self,bufTag,buffer}
                   ...
 
@@ -99,7 +99,7 @@ optional arguments:
   --nameOnly            LeaderF is in NameOnly mode by default
   --fullPath            LeaderF is in FullPath mode by default
   --fuzzy               LeaderF is in Fuzzy mode by default
-  --regex               LeaderF is in Regex mode by default
+  --regexMode           LeaderF is in Regex mode by default
 
 subcommands:
 
@@ -126,7 +126,7 @@ use `:Leaderf <subcommand> -h` to get specific help of subcommand, e.g., `:Leade
 usage: Leaderf[!] mru [-h] [--cwd] [--reverse] [--stayOpen]
                       [--input INPUT | --cword]
                       [--top | --bottom | --left | --right | --belowright | --aboveleft | --fullScreen]
-                      [--nameOnly | --fullPath | --fuzzy | --regex]
+                      [--nameOnly | --fullPath | --fuzzy | --regexMode]
 
 optional arguments:
   -h, --help     show this help message and exit
@@ -149,7 +149,7 @@ common arguments:
   --nameOnly     LeaderF is in NameOnly mode by default
   --fullPath     LeaderF is in FullPath mode by default
   --fuzzy        LeaderF is in Fuzzy mode by default
-  --regex        LeaderF is in Regex mode by default
+  --regexMode    LeaderF is in Regex mode by default
 
 If [!] is given, enter normal mode directly.
 ```

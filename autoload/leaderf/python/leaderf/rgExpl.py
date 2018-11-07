@@ -20,6 +20,10 @@ class RgExplorer(Explorer):
         self._executor = []
 
     def getContent(self, *args, **kwargs):
+        literal = kwargs.get("arguments", {}).get("--literal", [])
+        if literal:
+            pattern = 
+        regex = kwargs.get("arguments", {}).get("--regex", [])
         if os.name == 'nt':
             cwd = '.'
         else:

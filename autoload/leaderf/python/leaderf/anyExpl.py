@@ -515,6 +515,7 @@ class AnyHub(object):
                 parser.set_defaults(start=partial(self._default_action, category, positional_args))
 
         try:
+            print(repr(arg_line))
             # do not produce an error when extra arguments are present
             the_args = self._parser.parse_known_args(shlex.split(arg_line))[0]
             arguments = vars(the_args)

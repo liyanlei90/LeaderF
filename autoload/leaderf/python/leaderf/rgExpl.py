@@ -21,16 +21,25 @@ class RgExplorer(Explorer):
 
     def getContent(self, *args, **kwargs):
         literal = kwargs.get("arguments", {}).get("--literal", [])
-        if literal:
-            pattern = 
         regex = kwargs.get("arguments", {}).get("--regex", [])
+        print(literal, regex)
+        pattern = ""
+        if literal:
+            pattern += "--fixed-strings "
+            for i in literal:
+                pattern += r'-e %s ' % i
+        elif regex:
+            for i in regex:
+                pattern += r'-e %s ' % i
+
         if os.name == 'nt':
             cwd = '.'
         else:
             cwd = ''
         executor = AsyncExecutor()
         self._executor.append(executor)
-        cmd = '''rg --no-heading --with-filename --color never --line-number --smart-case "int" %s''' % cwd
+        cmd = '''rg --no-heading --with-filename --color never --line-number --smart-case {} {}'''.format(pattern, cwd)
+        print(repr(cmd))
         content = executor.execute(cmd)
         # content = executor.execute(cmd, encoding=lfEval("&encoding"))
         return content
